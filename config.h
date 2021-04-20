@@ -12,16 +12,29 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "Jetbrains Mono:size=11" };
 static const char dmenufont[]       = "Jetbrains Mono:size=11";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-//static const char col_gray3[]       = "#bd93f9";
-static const char col_gray3[]       = "#007abd";
-static const char col_gray4[]       = "#888888";
-static const char col_cyan[]        = "#222222";
-static const char *colors[][3]      = {
+
+#include "/home/aymeric/.cache/wal/colors-wal-dwm.h"
+
+//static const char col_gray1[]       = "#222222";
+//static const char col_gray2[]       = "#444444";
+//static const char col_gray3[]       = "#bd93f9"; my ancient color for bar
+//static const char col_gray3[]       = "#007abd"; //new color for bar
+//static const char col_gray4[]       = "#888888";
+//static const char col_cyan[]        = "#222222";
+static const unsigned int baralpha = 0xd0;
+//static const unsigned int baralpha = OPAQUE;
+static const unsigned int borderalpha = OPAQUE;
+
+//static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+//	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
+//	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+//};
+
+static const unsigned int alphas[][3]      = {
+	/*               fg      bg        border     */
+	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
+	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
 };
 
 /* tagging */
@@ -77,13 +90,18 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+//static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = {"dmenu_run", "-fn",dmenufont , "-nb", "$color0", "-nf", "$color15", "-sb", "$color1", "-sf", "$color15"};
 static const char *termcmd[]  = { "alacritty", NULL };
+static const char *browsercmd[]  = { "firefox", NULL };
+static const char *dmenustart[] = { "/home/aymeric/scripts/dmen.sh", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,             XK_Return, spawn,          {.v = termcmd } },
+//	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_d,      spawn,          {.v = dmenustart } },
+	{ MODKEY,             		XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,             		XK_m,	   spawn,          {.v = browsercmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -114,7 +132,7 @@ static Key keys[] = {
 	{ Mod1Mask,                     0x26,      setlayout,      {.v = &layouts[0]} },
 	{ Mod1Mask,      	        0xe9,      setlayout,      {.v = &layouts[1]} },
 	{ Mod1Mask,                     0x22,      setlayout,      {.v = &layouts[2]} },
-	{ Mod1Mask,			0x27,	   setlayout,	   {.v = &layouts[3]} },
+	{ Mod1Mask,			0x27,	   setlayout,	   {.v = &layouts[11]} },
 	{ Mod1Mask,			0x28,	   setlayout,	   {.v = &layouts[4]} },
 	{ Mod1Mask,			0x2d,	   setlayout,	   {.v = &layouts[5]} },
 	{ Mod1Mask,			0xe8,	   setlayout,	   {.v = &layouts[6]} },
