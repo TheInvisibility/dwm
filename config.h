@@ -7,7 +7,7 @@ static const unsigned int gappih    = 10;       /* horiz inner gap between windo
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
-static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
+static int smartgaps      	    = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "Jetbrains Mono:size=11" };
@@ -95,6 +95,9 @@ static const char *dmenucmd[] = {"dmenu_run", "-fn",dmenufont , "-nb", "$color0"
 static const char *termcmd[]  = { "alacritty", NULL };
 static const char *browsercmd[]  = { "firefox", NULL };
 static const char *dmenustart[] = { "/home/aymeric/scripts/dmen.sh", NULL };
+static const char *slockcmd[] = { "slock", NULL };
+static const char *search[] = { "search", NULL };
+static const char *google[] = { "google", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -102,6 +105,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenustart } },
 	{ MODKEY,             		XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,             		XK_m,	   spawn,          {.v = browsercmd } },
+	{ MODKEY,             		XK_s,	   spawn,          {.v = search } },
+	{ MODKEY,             		XK_g,	   spawn,          {.v = google } },
+	{ MODKEY|ShiftMask,             XK_l,	   spawn,          {.v = slockcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -124,8 +130,8 @@ static Key keys[] = {
 	{ MODKEY|Mod1Mask|ShiftMask,    0x5f,      incrohgaps,     {.i = -1 } }, //8 for azerty
 	{ MODKEY|Mod1Mask,              XK_9,      incrovgaps,     {.i = +1 } },
 	{ MODKEY|Mod1Mask|ShiftMask,    XK_9,      incrovgaps,     {.i = -1 } },
-	{ MODKEY|Mod1Mask,              XK_0,      togglegaps,     {0} },
-	{ MODKEY|Mod1Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
+	{ MODKEY|Mod1Mask,              0xe0,      togglegaps,     {0} }, //0 for azerty
+	{ MODKEY|Mod1Mask|ShiftMask,    0xe0,      defaultgaps,    {0} }, //0 for azerty
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
 	{ MODKEY,             		XK_f,      togglefullscr,  {0} },
