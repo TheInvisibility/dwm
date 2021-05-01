@@ -38,7 +38,7 @@ static const unsigned int alphas[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6"/*, "7", "8", "9" */};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -79,6 +79,11 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod4Mask
+#define XF86AudioRaiseVolume 0x1008ff13
+#define XF86AudioLowerVolume 0x1008ff11
+#define XF86AudioMute 0x1008ff12
+#define XF86MonBrightnessUp 0x1008ff02
+#define XF86MonBrightnessDown 0x1008ff03
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -92,22 +97,35 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 //static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *dmenucmd[] = {"dmenu_run", "-fn",dmenufont , "-nb", "$color0", "-nf", "$color15", "-sb", "$color1", "-sf", "$color15"};
-static const char *termcmd[]  = { "alacritty", NULL };
+static const char *termcmd[]  = { "st", NULL };
 static const char *browsercmd[]  = { "firefox", NULL };
 static const char *dmenustart[] = { "/home/aymeric/scripts/dmen.sh", NULL };
 static const char *slockcmd[] = { "slock", NULL };
 static const char *search[] = { "search", NULL };
 static const char *google[] = { "google", NULL };
 
+static const char *brightnessupcmd[] = { "brightnessctl", "set", "5%+", NULL };
+static const char *brightnessdowncmd[] = { "brightnessctl", "set", "5%-", NULL };
+static const char *volumeraisecmd[] = { "amixer", "-q", "set", "Master", "5%+", NULL };
+static const char *volumelowercmd[] = { "amixer", "-q", "set", "Master", "5%-", NULL };
+static const char *volumetogglecmd[] = { "amixer", "-q", "set", "Master", "toggle", NULL };
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 //	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenustart } },
-	{ MODKEY,             		XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,             		XK_m,	   spawn,          {.v = browsercmd } },
-	{ MODKEY,             		XK_s,	   spawn,          {.v = search } },
-	{ MODKEY,             		XK_g,	   spawn,          {.v = google } },
-	{ MODKEY|ShiftMask,             XK_l,	   spawn,          {.v = slockcmd } },
+	{ MODKEY,             					XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,             					XK_m,	     spawn,          {.v = browsercmd } },
+	{ MODKEY,             					XK_s,	     spawn,          {.v = search } },
+	{ MODKEY,             					XK_g,	     spawn,          {.v = google } },
+	{ MODKEY|ShiftMask,             XK_l,	     spawn,          {.v = slockcmd } },
+
+	{ 0,                            XF86MonBrightnessUp,  spawn,  {.v = brightnessupcmd } },
+	{ 0,                            XF86MonBrightnessDown,    spawn,  {.v = brightnessdowncmd } },
+	{ 0,                            XF86AudioRaiseVolume,   spawn,  {.v = volumeraisecmd } },
+	{ 0,                            XF86AudioLowerVolume,   spawn,  {.v = volumelowercmd } },
+	{ 0,                            XF86AudioMute,   spawn,  {.v = volumetogglecmd } },
+
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -115,7 +133,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	//{ MODKEY,                       XK_Return, zoom,           {0} },
+	{ MODKEY|Mod1Mask,              XK_Return, zoom,           {0} },
 	{ MODKEY|Mod1Mask,              XK_u,      incrgaps,       {.i = +1 } },
 	{ MODKEY|Mod1Mask|ShiftMask,    XK_u,      incrgaps,       {.i = -1 } },
 	{ MODKEY|Mod1Mask,              XK_i,      incrigaps,      {.i = +1 } },
@@ -134,16 +152,16 @@ static Key keys[] = {
 	{ MODKEY|Mod1Mask|ShiftMask,    0xe0,      defaultgaps,    {0} }, //0 for azerty
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
-	{ MODKEY,             		XK_f,      togglefullscr,  {0} },
+	{ MODKEY,             					XK_f,      togglefullscr,  {0} },
 	{ Mod1Mask,                     0x26,      setlayout,      {.v = &layouts[0]} },
-	{ Mod1Mask,      	        0xe9,      setlayout,      {.v = &layouts[1]} },
-	{ Mod1Mask,                     0x22,      setlayout,      {.v = &layouts[2]} },
-	{ Mod1Mask,			0x27,	   setlayout,	   {.v = &layouts[11]} },
-	{ Mod1Mask,			0x28,	   setlayout,	   {.v = &layouts[4]} },
-	{ Mod1Mask,			0x2d,	   setlayout,	   {.v = &layouts[5]} },
-	{ Mod1Mask,			0xe8,	   setlayout,	   {.v = &layouts[6]} },
-	{ Mod1Mask,			0x5f,	   setlayout,	   {.v = &layouts[7]} },
-	{ Mod1Mask,			0xe7,	   setlayout,	   {.v = &layouts[8]} },
+	{ Mod1Mask,      	    			    0xe9,      setlayout,      {.v = &layouts[1]} },
+	{ Mod1Mask,         	          0x22,      setlayout,      {.v = &layouts[2]} },
+	{ Mod1Mask,											0x27,	  	 setlayout,	   {.v = &layouts[11]} },
+	{ Mod1Mask,											0x28,	   	 setlayout,	   {.v = &layouts[4]} },
+	{ Mod1Mask,											0x2d,	   	 setlayout,	   {.v = &layouts[5]} },
+	{ Mod1Mask,											0xe8,	  	 setlayout,	   {.v = &layouts[6]} },
+	{ Mod1Mask,											0x5f,		   setlayout,	   {.v = &layouts[7]} },
+	{ Mod1Mask,											0xe7,	   	 setlayout,	   {.v = &layouts[8]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -151,6 +169,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	TAGKEYS(                        0x26,                      0)
 	TAGKEYS(                        0xe9,                      1)
