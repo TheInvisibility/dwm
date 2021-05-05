@@ -103,7 +103,7 @@ static const char *dmenustart[] = { "/home/aymeric/scripts/dmen.sh", NULL };
 static const char *slockcmd[] = { "slock", NULL };
 static const char *search[] = { "search", NULL };
 static const char *google[] = { "google", NULL };
-static const char *screenshotcmd[] = { "scrot -q 100", NULL };
+//static const char *screenshotcmd[] = { "scrot", "-q", "100", "~/Screenshots", NULL };
 static const char *screenshotzonecmd[] = { "screenshot", NULL };
 
 static const char *brightnessupcmd[] = { "brightnessctl", "set", "5%+", NULL };
@@ -121,7 +121,7 @@ static Key keys[] = {
 	{ MODKEY,             					XK_s,	     spawn,          {.v = search } },
 	{ MODKEY,             					XK_g,	     spawn,          {.v = google } },
 	{ MODKEY|ShiftMask,             XK_l,	     spawn,          {.v = slockcmd } },
-	{ MODKEY,             					XK_s,	     spawn,          {.v = screenshotcmd } },
+	//{ MODKEY,             					XK_s,	     spawn,          {.v = screenshotcmd } },
 	{ MODKEY|ShiftMask,             XK_s,	     spawn,          {.v = screenshotzonecmd } },
 
 	{ 0,                         XF86MonBrightnessUp,  spawn,  {.v = brightnessupcmd } },
